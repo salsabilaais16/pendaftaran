@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Pendaftaran Ekstrakurikuler - SMK Negeri Tengaran</title>
+    <meta name="color-scheme" content="light">
+
+    <link rel="stylesheet" href="tugas.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- KARTU INFORMASI -->
+        <div class="info">
+
+            <div class="logo">
+                🎓
+            </div>
+
+            <h1>
+                SMK Negeri <span>Tengaran</span>
+            </h1>
+
+            <p>
+                Yuk kembangkan bakat, minat, dan kemampuanmu
+                melalui kegiatan ekstrakurikuler yang sesuai
+                dengan passion kamu!
+            </p>
+
+            <div class="benefit">
+                <div class="benefit-icon">★</div>
+                <span>Mengembangkan bakat dan minat</span>
+            </div>
+
+            <div class="benefit">
+                <div class="benefit-icon">✓</div>
+                <span>Menambah pengalaman dan keterampilan</span>
+            </div>
+
+            <div class="benefit">
+                <div class="benefit-icon">👥</div>
+                <span>Menambah teman dan pengalaman berorganisasi</span>
+            </div>
+
+        </div>
+
+
+        <!-- KARTU FORM -->
+        <div class="form-section">
+
+            <div class="form-header">
+                <h2>Pendaftaran Ekskul</h2>
+                <p>Isi data diri kamu dengan lengkap dan benar.</p>
+            </div>
+
+            <form id="registrationForm" novalidate>
+
+                <!-- Nama -->
+                <div class="form-group">
+
+                    <label for="nama">
+                        Nama Lengkap <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nama"
+                        name="nama"
+                        placeholder="Masukkan nama lengkap"
+                    >
+
+                    <div class="error-message" id="namaError">
+                        Nama lengkap minimal 3 karakter.
+                    </div>
+
+                </div>
+
+
+                <!-- Email -->
+                <div class="form-group">
+
+                    <label for="email">
+                        Email <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="contoh@email.com"
+                    >
+
+                    <div class="error-message" id="emailError">
+                        Masukkan alamat email yang valid.
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+                <div class="form-group">
+
+                    <label for="password">
+                        Password <span class="required">*</span>
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="password-input"
+                            placeholder="Minimal 8 karakter"
+                        >
+
+                        <button
+                            type="button"
+                            class="password-btn"
+                            onclick="togglePassword('password', this)"
+                        >
+                            Lihat
+                        </button>
+
+                    </div>
+
+                    <div class="error-message" id="passwordError">
+                        Password minimal 8 karakter.
+                    </div>
+
+                </div>
+
+
+                <!-- Konfirmasi Password -->
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Konfirmasi Password <span class="required">*</span>
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            class="password-input"
+                            placeholder="Masukkan password kembali"
+                        >
+
+                        <button
+                            type="button"
+                            class="password-btn"
+                            onclick="togglePassword('confirmPassword', this)"
+                        >
+                            Lihat
+                        </button>
+
+                    </div>
+
+                    <div class="error-message" id="confirmPasswordError">
+                        Konfirmasi password harus sama dengan password.
+                    </div>
+
+                </div>
+
+
+                <!-- Ekstrakurikuler -->
+                <div class="form-group">
+
+                    <label for="ekskul">
+                        Pilihan Ekstrakurikuler <span class="required">*</span>
+                    </label>
+
+                    <select id="ekskul" name="ekskul">
+
+                        <option value="">
+                            -- Pilih Ekstrakurikuler --
+                        </option>
+
+                        <option value="Pramuka">Pramuka</option>
+                        <option value="PMR">PMR</option>
+                        <option value="Paskibra">Paskibra</option>
+                        <option value="OSIS">OSIS</option>
+                        <option value="Rohis">Rohis</option>
+                        <option value="Futsal">Futsal</option>
+                        <option value="Pencak Silat">Pencak Silat</option>
+                        <option value="Voli">Voli</option>
+                        <option value="Padus">Padus</option>
+                        <option value="Seni Tari">Seni Tari</option>
+                        <option value="Drumband">Drumband</option>
+                        <option value="Rabana">Rabana</option>
+                        <option value="MTQ">MTQ</option>
+                        <option value="Fosster">Fosster</option>
+                        <option value="Jurnalistik">Jurnalistik</option>
+                        <option value="Bahasa Jepang">Bahasa Jepang</option>
+
+                    </select>
+
+                    <div class="error-message" id="ekskulError">
+                        Silakan pilih salah satu ekstrakurikuler.
+                    </div>
+
+                </div>
+
+
+                <!-- Submit -->
+                <button type="submit" class="submit-btn">
+                    Daftar Sekarang
+                </button>
+
+                <div class="success-message" id="successMessage"></div>
+
+                <div class="footer-text">
+                    * Pastikan semua data sudah benar sebelum mendaftar.
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- CHATBOT -->
+    <button class="chat-toggle" id="chatToggle" aria-label="Buka chatbot bantuan">
+        💬
+        <span class="chat-badge" id="chatBadge"></span>
+    </button>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="chat-avatar">🤖</div>
+            <div>
+                <div class="chat-title">Asisten Ekskul</div>
+                <div class="chat-sub">Siap bantu pendaftaranmu</div>
+            </div>
+            <button class="chat-close" id="chatClose" aria-label="Tutup chatbot">✕</button>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="Tulis pertanyaanmu di sini...">
+            <button class="chat-send" id="chatSend" aria-label="Kirim">➤</button>
+        </div>
+    </div>
+
+    <script src="tugas.js"></script>
+
+</body>
+</html>
