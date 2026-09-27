@@ -1,175 +1,321 @@
-// ===== ELEMEN FORM =====
+// ===== FORM PENDAFTARAN =====
+
 const form = document.getElementById("registrationForm");
 const successMessage = document.getElementById("successMessage");
 
-// Setiap kolom didaftar di sini: elemen, id pesan error, dan cara mengeceknya.
 const fields = [
-    { el: document.getElementById("nama"), errorId: "namaError",
-      cek: function (v) { return v.trim().length >= 3; },
-      pesan: "Nama minimal 3 karakter." },
-
-    { el: document.getElementById("email"), errorId: "emailError",
-      cek: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); },
-      pesan: "Format email tidak valid." },
-
-    { el: document.getElementById("password"), errorId: "passwordError",
-      cek: function (v) { return v.length >= 8; },
-      pesan: "Password minimal 8 karakter." },
-
-    { el: document.getElementById("confirmPassword"), errorId: "confirmPasswordError",
-      cek: function (v) { return v !== "" && v === document.getElementById("password").value; },
-      pesan: "Konfirmasi password harus sama." },
-
-    { el: document.getElementById("ekskul"), errorId: "ekskulError",
-      cek: function (v) { return v !== ""; },
-      pesan: "Silakan pilih ekstrakurikuler." }
+    ["nama", "namaError", "Nama minimal 3 karakter."],
+    ["email", "emailError", "Format email tidak valid."],
+    ["password", "passwordError", "Password minimal 8 karakter."],
+    ["confirmPassword", "confirmPasswordError", "Konfirmasi password harus sama."],
+    ["ekskul", "ekskulError", "Silakan pilih ekstrakurikuler."]
 ];
 
-function togglePassword(fieldId, btn) {
-    const field = document.getElementById(fieldId);
-    const tampil = field.type === "password";
-    field.type = tampil ? "text" : "password";
-    btn.textContent = tampil ? "Sembunyikan" : "Lihat";
+
+// ===== MENAMPILKAN PASSWORD =====
+
+function togglePassword(id, tombol) {
+
+    const input = document.getElementById(id);
+
+    if (input.type === "password") {
+        input.type = "text";
+        tombol.textContent = "Sembunyikan";
+    } else {
+        input.type = "password";
+        tombol.textContent = "Lihat";
+    }
 }
 
-// Mengecek semua kolom satu per satu memakai perulangan for.
+
+// ===== VALIDASI FORM =====
+
 function validasi() {
+
     let semuaBenar = true;
 
+    // Mengecek semua input menggunakan for
     for (let i = 0; i < fields.length; i++) {
-        const f = fields[i];
-        const valid = f.cek(f.el.value);
-        const errorEl = document.getElementById(f.errorId);
 
-        f.el.classList.toggle("valid", valid);
-        f.el.classList.toggle("invalid", !valid);
-        errorEl.textContent = valid ? "" : f.pesan;
-        errorEl.classList.toggle("show", !valid);
+        const input = document.getElementById(fields[i][0]);
+        const error = document.getElementById(fields[i][1]);
 
-        if (!valid) semuaBenar = false;
+        let benar = true;
+
+
+        // Nama minimal 3 karakter
+        if (fields[i][0] === "nama") {
+
+            if (input.value.trim().length < 3) {
+                benar = false;
+            }
+        }
+
+
+        // Email harus sesuai format
+        else if (fields[i][0] === "email") {
+
+            const polaEmail =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!polaEmail.test(input.value.trim())) {
+                benar = false;
+            }
+        }
+
+
+        // Password minimal 8 karakter
+        else if (fields[i][0] === "password") {
+
+            if (input.value.length < 8) {
+                benar = false;
+            }
+        }
+
+
+        // Konfirmasi password harus sama
+        else if (fields[i][0] === "confirmPassword") {
+
+            const password =
+                document.getElementById("password").value;
+
+            if (input.value !== password ||
+                input.value === "") {
+
+                benar = false;
+            }
+        }
+
+
+        // Ekstrakurikuler harus dipilih
+        else if (fields[i][0] === "ekskul") {
+
+            if (input.value === "") {
+                benar = false;
+            }
+        }
+
+
+        // Jika benar
+        if (benar) {
+
+            input.classList.add("valid");
+            input.classList.remove("invalid");
+
+            error.textContent = "";
+            error.classList.remove("show");
+
+        }
+
+        // Jika salah
+        else {
+
+            input.classList.add("invalid");
+            input.classList.remove("valid");
+
+            error.textContent = fields[i][2];
+            error.classList.add("show");
+
+            semuaBenar = false;
+        }
     }
 
     return semuaBenar;
 }
 
+
+// ===== VALIDASI SAAT DIKETIK =====
+
 for (let i = 0; i < fields.length; i++) {
-    const event = fields[i].el.tagName === "SELECT" ? "change" : "input";
-    fields[i].el.addEventListener(event, validasi);
+
+    const input =
+        document.getElementById(fields[i][0]);
+
+    if (input.tagName === "SELECT") {
+
+        input.addEventListener("change", validasi);
+
+    } else {
+
+        input.addEventListener("input", validasi);
+    }
 }
 
-form.addEventListener("submit", function (event) {
+
+// ===== SAAT SUBMIT =====
+
+form.addEventListener("submit", function(event) {
+
+    // Mencegah halaman refresh
     event.preventDefault();
-    const namaEl = document.getElementById("nama");
 
     if (validasi()) {
-        successMessage.textContent = "Pendaftaran berhasil! Terima kasih, " + namaEl.value.trim() + ".";
+
+        const nama =
+            document.getElementById("nama").value;
+
+        successMessage.textContent =
+            "Pendaftaran berhasil! Terima kasih, " +
+            nama + ".";
+
         successMessage.classList.add("show");
+
     } else {
+
         successMessage.textContent = "";
         successMessage.classList.remove("show");
     }
 });
 
-// ===== CHATBOT =====
-const chatToggle = document.getElementById("chatToggle");
-const chatWindow = document.getElementById("chatWindow");
-const chatClose = document.getElementById("chatClose");
-const chatBody = document.getElementById("chatBody");
-const chatInput = document.getElementById("chatInput");
-const chatSend = document.getElementById("chatSend");
-const chatBadge = document.getElementById("chatBadge");
 
-const faq = [
-    { keys: ["ekskul apa", "pilihan ekskul", "ekstrakurikuler apa saja", "list ekskul"],
-      answer: "Ekstrakurikuler yang tersedia: Pramuka, PMR, Paskibra, OSIS, Rohis, Futsal, Basket, Voli, Seni Musik, dan Seni Tari." },
-    { keys: ["password", "kata sandi"],
-      answer: "Password minimal 8 karakter, dan Konfirmasi Password harus sama persis dengan Password." },
-    { keys: ["email"],
-      answer: "Email harus memakai format yang valid, contohnya namakamu@email.com." },
-    { keys: ["nama"],
-      answer: "Nama lengkap wajib diisi minimal 3 karakter." },
-    { keys: ["gagal", "error", "tidak bisa"],
-      answer: "Kalau gagal, cek kolom yang bertanda merah. Kolom valid akan berwarna hijau." },
-    { keys: ["biaya", "bayar", "gratis"],
-      answer: "Pendaftaran ekstrakurikuler ini gratis, tidak dipungut biaya." },
-    { keys: ["cara daftar", "bagaimana cara", "gimana cara", "panduan"],
-      answer: "Isi Nama, Email, Password, Konfirmasi Password, pilih Ekstrakurikuler, lalu klik \"Daftar Sekarang\"." },
-    { keys: ["halo", "hai", "hi", "selamat"],
-      answer: "Halo! Aku Asisten Ekskul. Ada yang bisa dibantu soal pendaftaran?" },
-    { keys: ["terima kasih", "makasih", "thanks"],
-      answer: "Sama-sama! Semangat mengembangkan bakat dan minatmu 🎓" }
+// ==================================================
+//                     CHATBOT
+// ==================================================
+
+const chatToggle =
+    document.getElementById("chatToggle");
+
+const chatWindow =
+    document.getElementById("chatWindow");
+
+const chatClose =
+    document.getElementById("chatClose");
+
+const chatBody =
+    document.getElementById("chatBody");
+
+const chatInput =
+    document.getElementById("chatInput");
+
+const chatSend =
+    document.getElementById("chatSend");
+
+const chatBadge =
+    document.getElementById("chatBadge");
+
+
+// Kata kunci chatbot
+const pertanyaan = [
+    "ekskul",
+    "password",
+    "email",
+    "nama",
+    "gagal",
+    "biaya",
+    "cara daftar",
+    "halo"
 ];
 
-const defaultAnswer = "Maaf, aku belum paham. Coba tanyakan soal ekskul, cara daftar, atau syarat password ya.";
-const quickQuestions = ["Ekskul apa saja yang tersedia?", "Bagaimana cara daftar?", "Syarat password apa?"];
 
-function addMessage(text, sender) {
-    const el = document.createElement("div");
-    el.className = "msg " + sender;
-    el.textContent = text;
-    chatBody.appendChild(el);
-    chatBody.scrollTop = chatBody.scrollHeight;
+// Jawaban chatbot
+const jawaban = [
+    "Ekskul yang tersedia: Pramuka, PMR, Paskibra, OSIS, Rohis, Futsal, Basket, Voli, Seni Musik, dan Seni Tari.",
+    "Password minimal 8 karakter dan konfirmasi password harus sama.",
+    "Email harus menggunakan format yang benar, contoh: nama@email.com.",
+    "Nama lengkap minimal 3 karakter.",
+    "Cek kolom yang berwarna merah. Kolom yang benar akan berwarna hijau.",
+    "Pendaftaran ekstrakurikuler ini gratis.",
+    "Isi Nama, Email, Password, Konfirmasi Password, pilih Ekstrakurikuler, lalu klik Daftar Sekarang.",
+    "Halo! Ada yang bisa saya bantu?"
+];
+
+
+// Menambahkan pesan chatbot
+function tambahPesan(teks, pengirim) {
+
+    const pesan =
+        document.createElement("div");
+
+    pesan.className =
+        "msg " + pengirim;
+
+    pesan.textContent = teks;
+
+    chatBody.appendChild(pesan);
+
+    chatBody.scrollTop =
+        chatBody.scrollHeight;
 }
 
-function addQuickReplies() {
-    const wrap = document.createElement("div");
-    wrap.className = "quick-replies";
 
-    for (let i = 0; i < quickQuestions.length; i++) {
-        const q = quickQuestions[i];
-        const btn = document.createElement("button");
-        btn.className = "quick-reply-btn";
-        btn.textContent = q;
-        btn.onclick = function () { handleUserMessage(q); };
-        wrap.appendChild(btn);
-    }
+// Mencari jawaban menggunakan for
+function jawabChatbot(teks) {
 
-    chatBody.appendChild(wrap);
-    chatBody.scrollTop = chatBody.scrollHeight;
-}
+    teks = teks.toLowerCase();
 
-// Mencari jawaban dengan mengecek tiap FAQ dan tiap kata kunci di dalamnya.
-function botReply(userText) {
-    const lower = userText.toLowerCase();
+    for (let i = 0; i < pertanyaan.length; i++) {
 
-    for (let i = 0; i < faq.length; i++) {
-        for (let j = 0; j < faq[i].keys.length; j++) {
-            if (lower.indexOf(faq[i].keys[j]) !== -1) {
-                return faq[i].answer;
-            }
+        if (teks.includes(pertanyaan[i])) {
+
+            return jawaban[i];
         }
     }
 
-    return defaultAnswer;
+    return "Maaf, saya belum memahami pertanyaan tersebut.";
 }
 
-function handleUserMessage(text) {
-    const trimmed = text.trim();
-    if (trimmed === "") return;
 
-    addMessage(trimmed, "user");
+// Mengirim pesan
+function kirimPesan() {
+
+    const teks =
+        chatInput.value.trim();
+
+    if (teks === "") {
+        return;
+    }
+
+    tambahPesan(teks, "user");
+
     chatInput.value = "";
-    setTimeout(function () { addMessage(botReply(trimmed), "bot"); }, 350);
+
+    const jawabanBot =
+        jawabChatbot(teks);
+
+    tambahPesan(jawabanBot, "bot");
 }
 
-chatToggle.addEventListener("click", function () {
+
+// ===== BUKA CHATBOT =====
+
+chatToggle.addEventListener("click", function() {
+
     chatWindow.classList.toggle("open");
+
     chatBadge.style.display = "none";
 
     if (chatBody.children.length === 0) {
-        addMessage("Halo! Tanyakan apa saja soal pendaftaran, atau pilih salah satu di bawah ini 👇", "bot");
-        addQuickReplies();
+
+        tambahPesan(
+            "Halo! Ada yang bisa saya bantu tentang pendaftaran?",
+            "bot"
+        );
     }
 });
 
-chatClose.addEventListener("click", function () {
+
+// ===== TUTUP CHATBOT =====
+
+chatClose.addEventListener("click", function() {
+
     chatWindow.classList.remove("open");
 });
 
-chatSend.addEventListener("click", function () {
-    handleUserMessage(chatInput.value);
+
+// ===== TOMBOL KIRIM =====
+
+chatSend.addEventListener("click", function() {
+
+    kirimPesan();
 });
 
-chatInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") handleUserMessage(chatInput.value);
+
+// ===== KIRIM DENGAN ENTER =====
+
+chatInput.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+
+        kirimPesan();
+    }
 });
